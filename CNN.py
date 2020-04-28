@@ -8,7 +8,7 @@ NUM_CLASSES = 10
 IMG_SIZE = 28
 
 
-def cnn_model():
+def model():
     model = Sequential()
 
     model.add(Conv2D(32, (3, 3), padding='same',
