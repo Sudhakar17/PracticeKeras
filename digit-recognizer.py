@@ -16,17 +16,21 @@ from keras.callbacks import ModelCheckpoint
 from keras.preprocessing.image import ImageDataGenerator
 from keras.utils.np_utils import to_categorical # convert to one-hot-encoding
 
-# Load the data
-train = pd.read_csv("D:\\Dataset\\digit-recognizer\\train.csv")
-test = pd.read_csv("D:\\Dataset\\digit-recognizer\\test.csv")
+import CNN
 
+# Load the data
+# train = pd.read_csv("D:\\Dataset\\digit-recognizer\\train.csv")
+# test = pd.read_csv("D:\\Dataset\\digit-recognizer\\test.csv")
+
+train = pd.read_csv("D:\\1_Datasets\\digit-recognizer\\train.csv")
+test = pd.read_csv("D:\\1_Datasets\\digit-recognizer\\test.csv")
 
 # set the random seed and hyperparams
 random_seed = 42
 epochs = 50
 batch_size = 32
 adam = Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.01)
-checkpointer = ModelCheckpoint(filepath="./weights/cnn_weights.hdf5", 
+checkpointer = ModelCheckpoint(filepath="./weights/cnn_weights_l1.hdf5", 
                     verbose=1, save_best_only=True, save_weights_only=True)
 
 # plots
@@ -100,20 +104,21 @@ datagen.fit(x_train)
 
 # CNN model
 
-model = Sequential()
-model.add(Conv2D(32, kernel_size=(3, 3),
-                 activation='relu',
-                 input_shape=(28,28,1)))
-model.add(Conv2D(64, (3, 3), activation='relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
-model.add(Flatten())
-model.add(Dense(128, activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(10, activation='softmax'))
+# model = Sequential()
+# model.add(Conv2D(32, kernel_size=(3, 3),
+#                  activation='relu',
+#                  input_shape=(28,28,1)))
+# model.add(Conv2D(64, (3, 3), activation='relu'))
+# model.add(MaxPooling2D(pool_size=(2, 2)))
+# model.add(Dropout(0.25))
+# model.add(Flatten())
+# model.add(Dense(128, activation='relu'))
+# model.add(Dropout(0.5))
+# model.add(Dense(10, activation='softmax'))
+# model.summary()
+
+model = CNN.model()
 model.summary()
-
-
 
 # compile a model
 model.compile(loss=keras.losses.categorical_crossentropy,
@@ -153,4 +158,4 @@ results = np.argmax(results,axis = 1)
 results = pd.Series(results,name="Label")
 
 submission = pd.concat([pd.Series(range(1,28001),name = "ImageId"),results],axis = 1)
-submission.to_csv("cnn_v1.csv",index=False)
+submission.to_csv("cnn_v2.csv",index=False)
